@@ -1,0 +1,28 @@
+name: Luke Academy 自动签到
+on:
+  schedule:
+    - cron: "10 0 * * *"  # UTC 0:10 = 北京时间8:10，规避定时延迟
+  workflow_dispatch:      # 手动触发测试入口
+
+jobs:
+  auto-checkin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取仓库代码
+        uses: actions/checkout@v4
+
+      - name: 配置Python3.10环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: 安装依赖（仅requests）
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: 执行签到脚本（注入账号密码）
+        env:
+          LUKE_EMAIL: ${{ secrets.LUKE_EMAIL }}
+          LUKE_PASSWORD: ${{ secrets.LUKE_PASSWORD }}
+        run: python checkin.py
