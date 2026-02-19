@@ -18,15 +18,15 @@ def login():
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
         "Referer": LOGIN_API,
         "Origin": BASE_URL,
-        "Content-Type": "application/json;charset=UTF-8",
-        "Accept": "application/json, text/plain, */*"
+        "Content-Type": "text/plain;charset=UTF-8",
+        "Accept": "text/x-component"
     }
     s.headers.update(headers)
 
     try:
         # 登录请求体（仅email+password，无其他参数）
         login_data = {"email": EMAIL, "password": PWD}
-        res = s.post(LOGIN_API, json=login_data, timeout=20)
+        res = s.post(LOGIN_API, json=login_data, timeout=20, allow_redirects=False)
         res.raise_for_status()
 
         # 验证登录成功：Session存在Cookie即判定（适配无明确返回的情况）
@@ -56,10 +56,8 @@ def checkin(session):
 
         # 签到结果判定（覆盖所有情况）
         html = res.text.lower()
-        if "爱心" in res.text or "heart" in html:
+        if "已签到" in res.text or "heart" in html:
             print("✅ 签到成功！已获取爱心奖励")
-        elif "已签到" in res.text or "checked" in html:
-            print("ℹ️  今日已签到，无需重复操作")
         else:
             print(f"✅ 签到请求执行成功，接口响应状态：{res.status_code}")
             print(f"📌 接口响应摘要：{res.text[:300]}")
