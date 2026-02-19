@@ -3,7 +3,7 @@ import os
 from requests import Session
 
 BASE_URL = "https://www.lukeacademy.com"
-LOGIN_API = f"{BASE_URL}/auth/signin"  # 登录接口：POST+email+password
+LOGIN_API = f"{BASE_URL}/api/auth/callback/credentials"  # 登录接口：POST+email+password
 CHECKIN_API = f"{BASE_URL}/shop"       # 签到接口：POST+无参数+仅需Session
 
 # 从GitHub Secrets读取账号密码
