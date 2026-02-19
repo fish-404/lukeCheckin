@@ -25,4 +25,4 @@ jobs:
         env:
           LUKE_EMAIL: ${{ secrets.LUKE_EMAIL }}
           LUKE_PASSWORD: ${{ secrets.LUKE_PASSWORD }}
-        run: python checkin.py
+        run: python lukeCheckin.py
