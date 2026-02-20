@@ -1,15 +1,18 @@
 import os
 import time
 import random
+from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+load_dotenv()
+
 # 从环境变量读取账号密码（GitHub Actions 用 Secrets，本地可直接赋值）
-EMAIL = os.getenv("LUKE_EMAIL") or "你的邮箱"
-PWD = os.getenv("LUKE_PASSWORD") or "你的密码"
+EMAIL = os.getenv("LUKE_EMAIL") 
+PWD = os.getenv("LUKE_PASSWORD") 
 
 def auto_checkin():
     """每次重新登录，完成签到"""
