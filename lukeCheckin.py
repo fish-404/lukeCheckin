@@ -15,6 +15,24 @@ load_dotenv()
 # 从环境变量读取账号密码（GitHub Actions 用 Secrets，本地可直接赋值）
 EMAIL = os.getenv("LUKE_EMAIL") 
 PWD = os.getenv("LUKE_PASSWORD") 
+WEWORK_ROBOT_WEBHOOK = os.getenv("WEWORK_ROBOT_WEBHOOK")
+
+def send_wechat_notify(title, content):
+    if not WEWORK_ROBOT_WEBHOOK:
+        print("⚠️  未配置企业微信机器人Webhook，跳过推送")
+        return
+    try:
+        data = {
+            "msgtype": "markdown",
+            "markdown": {
+                "title": title,
+                "content": f"# {title}\n{content}\n\n**报错时间**：{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}"
+            }
+        }
+        requests.post(WEWORK_ROBOT_WEBHOOK, json=data, timeout=10)
+        print("✅ 企业微信机器人推送成功！")
+    except Exception as e:
+        print(f"❌ 企业微信机器人推送失败：{str(e)}")
 
 def auto_checkin():
     """每次重新登录，完成签到"""
@@ -80,11 +98,14 @@ def auto_checkin():
             # 验证签到结果
             if "已签到" in driver.page_source:
                 print("✅ 最终结果：签到成功/今日已签到！")
+                send_wechat_notify("签到成功", "今日已签到")
         except Exception as e:
             print(f"⚠️  未找到签到按钮或已完成签到，报错：{str(e)}")
+            send_wechat_notify("签到失败", str(e))
 
     except Exception as e:
         print(f"❌ 自动化流程失败：{str(e)}")
+        send_wechat_notify("自动签到失败", str(e))
     finally:
         # 确保浏览器关闭
         driver.quit()
