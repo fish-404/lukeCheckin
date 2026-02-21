@@ -9,6 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
+import requests
 
 load_dotenv()
 
@@ -26,7 +27,7 @@ def send_wechat_notify(title, content):
             "msgtype": "markdown",
             "markdown": {
                 "title": title,
-                "content": f"# {title}\n{content}\n\n**报错时间**：{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}"
+                "content": f"# {title}\n{content}\n\n**消息时间**：{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}"
             }
         }
         requests.post(WEWORK_ROBOT_WEBHOOK, json=data, timeout=10)
@@ -44,7 +45,6 @@ def auto_checkin():
     chrome_options.add_argument("--disable-gpu")
     # 模拟真人 User-Agent
     chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36")
-    chrome_options.binary_location = "/usr/bin/chromium-browser"
     driver = None
 
     try:
