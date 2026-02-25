@@ -17,11 +17,9 @@ load_dotenv()
 EMAIL = os.getenv("LUKE_EMAIL") 
 PWD = os.getenv("LUKE_PASSWORD") 
 WEWORK_ROBOT_WEBHOOK = os.getenv("WEWORK_ROBOT_WEBHOOK")
-print(WEWORK_ROBOT_WEBHOOK)
 
 def send_wechat_notify(title, content):
     if not WEWORK_ROBOT_WEBHOOK:
-        print(WEWORK_ROBOT_WEBHOOK)
         print("⚠️  未配置企业微信机器人Webhook，跳过推送")
         return
     try:
