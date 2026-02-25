@@ -30,4 +30,5 @@ jobs:
         env:
           LUKE_EMAIL: ${{ secrets.LUKE_EMAIL }}
           LUKE_PASSWORD: ${{ secrets.LUKE_PASSWORD }}
+          WEWORK_ROBOT_WEBHOOK: ${{ secrets.WEWORK_ROBOT_WEBHOOK }}
         run: python lukeCheckin.py
