@@ -98,7 +98,14 @@ def auto_checkin():
             # 验证签到结果
             if "已签到" in driver.page_source:
                 print("✅ 最终结果：签到成功/今日已签到！")
-                send_wechat_notify("签到成功", "今日已签到")
+                heart_button = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located(
+                        (By.XPATH, "//button[.//img[@alt='hearts']]")
+                    )
+                )
+            
+                heart_num = heart_button.text.strip()
+                send_wechat_notify("签到成功", f"今日已签到，当前爱心数：{heart_num}")
         except Exception as e:
             print(f"⚠️  未找到签到按钮或已完成签到，报错：{str(e)}")
             send_wechat_notify("签到失败", str(e))
