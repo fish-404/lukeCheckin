@@ -115,7 +115,7 @@ def auto_checkin():
                     )
                 )
             
-                heart_num = heart_button.text.strip()
+                heart_num = heart_button.get_attribute("innerText").strip()
                 send_wechat_notify("签到成功", f"今日已签到，当前爱心数：{heart_num}")
         except Exception as e:
             print(f"⚠️  未找到签到按钮或已完成签到，报错：{str(e)}")
