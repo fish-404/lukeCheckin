@@ -5,6 +5,6 @@
 2. 配置 secret:
    * LUKE_EMAIL：你的 Luke 登录邮箱
    * LUKE_PASSWORD：你的 Luke 登录密码
-   * WEWORK_ROBOT_WEBHOOK：企业微信机器人 webhook 地址（你可以创建一个只有你自己的企业，然后发送消息）
+   * WEWORK_ROBOT_WEBHOOK：企业微信机器人 webhook 地址（【可以不配置】你可以创建一个只有你自己的企业，然后发送消息，签到成功后会发送签到成功及当前爱心数）
 
 本仓库配置了 Action，会每天自动运行签到流程。
