@@ -7,8 +7,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
 import requests
 
 load_dotenv()
@@ -17,6 +15,20 @@ load_dotenv()
 EMAIL = os.getenv("LUKE_EMAIL") 
 PWD = os.getenv("LUKE_PASSWORD") 
 WEWORK_ROBOT_WEBHOOK = os.getenv("WEWORK_ROBOT_WEBHOOK")
+
+def get_chrome_driver(chrome_options):
+    # 判断是否为 GitHub Actions 环境（通过环境变量标识）
+    is_github_actions = os.getenv("GITHUB_ACTIONS") == "true"
+    print('🔍 当前环境：', 'GitHub Actions' if is_github_actions else '本地')
+    if is_github_actions:
+        # GitHub Actions 环境：用 webdriver_manager 解决版本匹配
+        from webdriver_manager.chrome import ChromeDriverManager
+        from selenium.webdriver.chrome.service import Service
+        service = Service(ChromeDriverManager().install())
+        return webdriver.Chrome(service=service, options=chrome_options)
+    else:
+        # 本地环境：原生快速初始化（无 Service）
+        return webdriver.Chrome(options=chrome_options)
 
 def send_wechat_notify(title, content):
     if not WEWORK_ROBOT_WEBHOOK:
@@ -48,9 +60,8 @@ def auto_checkin():
     driver = None
 
     try:
-        service = Service(ChromeDriverManager().install())
-        driver = webdriver.Chrome(service=service, options=chrome_options)
-
+        print("🔧 开始初始化Chrome浏览器...")
+        driver = get_chrome_driver(chrome_options)
         print("🔍 开始登录流程...")
         # 1. 访问登录页面
         driver.get("https://www.lukeacademy.com/auth/signin")
