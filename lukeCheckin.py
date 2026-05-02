@@ -51,7 +51,7 @@ def auto_checkin():
     """每次重新登录，完成签到"""
     # 浏览器配置（适配本地/GitHub Actions）
     chrome_options = Options()
-    chrome_options.add_argument("--headless=new")  # 无头模式
+    #chrome_options.add_argument("--headless=new")  # 无头模式
     chrome_options.add_argument("--no-sandbox")    # Linux 适配
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
@@ -101,22 +101,23 @@ def auto_checkin():
         # 6. 点击签到按钮
         try:
             checkin_btn = WebDriverWait(driver, 20).until(
-                EC.visibility_of_element_located((By.XPATH, '//button[contains(., "签到")]'))  # 等待元素可见
+                EC.visibility_of_element_located((By.XPATH, '//button[contains(., "每日签到")]'))  # 等待元素可见
             )
-            driver.execute_script("arguments[0].click();", checkin_btn)
+            from selenium.webdriver.common.action_chains import ActionChains
+            actions = ActionChains(driver)
+            actions.move_to_element(checkin_btn).click().perform()
+
             print("✅ 点击签到按钮成功！")
             time.sleep(2)
             # 验证签到结果
             if "已签到" in driver.page_source:
                 print("✅ 最终结果：签到成功/今日已签到！")
-                heart_button = WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located(
-                        (By.XPATH, "//button[.//img[@alt='hearts']]")
-                    )
-                )
-            
-                heart_num = heart_button.get_attribute("innerText").strip()
-                send_wechat_notify("签到成功", f"今日已签到，当前爱心数：{heart_num}")
+                score_num = driver.find_element(
+                    By.XPATH,
+                    '//a[contains(@href, "/shop#credits-exchange")]//span[@title]'
+                ).get_attribute("title")
+                send_wechat_notify("签到成功", f"今日已签到，当前积分数：{score_num}")
+                print(f"🎉 当前积分数：{score_num}")
         except Exception as e:
             print(f"⚠️  未找到签到按钮或已完成签到，报错：{str(e)}")
             send_wechat_notify("签到失败", str(e))
