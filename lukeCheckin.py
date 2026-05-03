@@ -51,7 +51,7 @@ def auto_checkin():
     """每次重新登录，完成签到"""
     # 浏览器配置（适配本地/GitHub Actions）
     chrome_options = Options()
-    #chrome_options.add_argument("--headless=new")  # 无头模式
+    chrome_options.add_argument("--headless=new")  # 无头模式
     chrome_options.add_argument("--no-sandbox")    # Linux 适配
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
