@@ -21,6 +21,8 @@ def get_chrome_driver(chrome_options):
     is_github_actions = os.getenv("GITHUB_ACTIONS") == "true"
     print('🔍 当前环境：', 'GitHub Actions' if is_github_actions else '本地')
     if is_github_actions:
+        from pyvirtualdisplay import Display
+        Display(visible=0, size=(1920, 1080)).start()
         # GitHub Actions 环境：用 webdriver_manager 解决版本匹配
         from webdriver_manager.chrome import ChromeDriverManager
         from selenium.webdriver.chrome.service import Service
@@ -51,7 +53,8 @@ def auto_checkin():
     """每次重新登录，完成签到"""
     # 浏览器配置（适配本地/GitHub Actions）
     chrome_options = Options()
-    chrome_options.add_argument("--headless=new")  # 无头模式
+    #chrome_options.add_argument("--headless=new")  # 无头模式
+    chrome_options.add_argument("--window-size=1920,1080")
     chrome_options.add_argument("--no-sandbox")    # Linux 适配
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
